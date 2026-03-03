@@ -1,0 +1,9 @@
+common:
+  tags:
+    - drivers
+    - remoteproc
+tests:
+  drivers.remoteproc.d2d:
+    tags: smoke
+    platform_allow:
+      - tt_grendel_smc
