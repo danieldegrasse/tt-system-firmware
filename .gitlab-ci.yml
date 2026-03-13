@@ -1,0 +1,33 @@
+build-job:
+  image: ghcr.io/tenstorrent/tt-zephyr-platforms/ci-image:v19.4.2
+  script:
+    - cd /tt-zephyr/tt-zephyr-platforms
+    # Pull repo revision to run CI on
+    - git remote add ci $CI_REPOSITORY_URL
+    - git fetch ci $CI_COMMIT_SHA
+    - git checkout FETCH_HEAD
+    - west packages pip --install
+    - west update
+    - cd /tt-zephyr
+    - ./tt-zephyr-platforms/scripts/ci/build-grendel.sh
+    - "echo $CI_PIPELINE_SOURCE"
+
+  tags:
+    - 8-core
+
+pr-tests:
+  needs: [build-job]
+  script:
+    - echo "CI Dry run (PR checks)"
+    - echo "Running PR specific tests..."
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "external_pull_request_event"
+  tags:
+    - 8-core
+
+main-tests:
+  needs: [build-job]
+  script:
+    - echo "CI Dry run"
+  tags:
+    - 8-core
