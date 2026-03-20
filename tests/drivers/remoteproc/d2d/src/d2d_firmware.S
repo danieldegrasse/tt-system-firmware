@@ -1,11 +1,11 @@
 .global _start
 
 _start:
-	# Write 0xdeadbeef to SMC scratch register at 0xC0010108 (SCRATCH[1])
+	# Write 0xdeadbeef to D2D SRAM at 0x1000
 	mv a0, zero
 	mv a1, zero
-	lui a0, 0xc0010
+	lui a0, 0x1
 	li a1, 0xdeadbeef
-	sw a1, 0x108(a0)
+	sw a1, 0x0(a0)
 _spin:
 	j _spin

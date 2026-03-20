@@ -8,6 +8,7 @@
 #include <stdint.h>
 
 #define TEST_PASS_VALUE 0xacafaca1
+#define TEST_FAIL_VALUE 0xdeadbeef
 
 #define WRITE_SCRATCH(num, val) (*(((volatile uint32_t *)0xC0010100) + (num * 2)) = (val))
 
@@ -21,6 +22,8 @@
 	do {                                                                                       \
 		if ((result) == TC_PASS) {                                                         \
 			WRITE_SCRATCH(0, TEST_PASS_VALUE);                                         \
+		} else {                                                                           \
+			WRITE_SCRATCH(0, TEST_FAIL_VALUE);                                         \
 		}                                                                                  \
 		PRINT_LINE;                                                                        \
 		TC_PRINT_RUNID;                                                                    \

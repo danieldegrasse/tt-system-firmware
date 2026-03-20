@@ -147,10 +147,6 @@ ZTEST(remoteproc_d2d, test_load_fw)
 
 	printk("D2D memory zeroed. Proceeding to load firmware binary...\n");
 
-	/* Write to scratch 0 so TB knows to start waves */
-	WRITE_SCRATCH(0, 0xdeadbeef);
-	printk("Started wave dump");
-
 	/* Load D2D firmware */
 	memcpy((void *)load_addr, d2d_fw_bin, sizeof(d2d_fw_bin));
 
@@ -164,11 +160,9 @@ ZTEST(remoteproc_d2d, test_load_fw)
 
 	/* Wait for firmware execution */
 	k_msleep(100);
-	/* Turn off waves */
-	WRITE_SCRATCH(0, 0xcafebabe);
-	printk("Stopped wave dump");
-	/* Read from scratch 1 */
-	uint32_t scratch_val = sys_read32(0xC0010108);
+
+	/* Read from d2d SRAM to verify firmware execution */
+	uint32_t scratch_val = sys_read32(0x04203000);
 	zassert_equal(scratch_val, 0xdeadbeef, "Unexpected value from D2D firmware: 0x%08X",
 		      scratch_val);
 }
