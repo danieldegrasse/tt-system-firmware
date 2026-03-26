@@ -48,6 +48,8 @@ enum {
 	 * arg0 sets the ASIC to dump from arg1 sets the number of bytes to dump
 	 */
 	kDmcCmdDumpJtagData = 4,
+	/* Simulates a PERST (Power Enable Reset) */
+	kDMCSimulatePerst = 5,
 };
 
 /* DMC command code structure. Used for debugging purposes */

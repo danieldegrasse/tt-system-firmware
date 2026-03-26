@@ -205,6 +205,9 @@ static bool process_led_blink_request(struct bh_chip *chip, uint8_t msg_id, uint
 	return false;
 }
 
+extern void gpio_asic_reset_callback(const struct device *port,
+		struct gpio_callback *cb, uint32_t pins);
+
 static bool process_dmc_command(struct bh_chip *chip, uint8_t msg_id, uint32_t msg_data)
 {
 	dmc_command_data cmd_data;
@@ -285,6 +288,10 @@ static bool process_dmc_command(struct bh_chip *chip, uint8_t msg_id, uint32_t m
 			LOG_WRN("Received DMC command to dump JTAG data from invalid ASIC index %d",
 				asic_idx);
 		}
+		break;
+	case kDMCSimulatePerst:
+		LOG_INF("Received DMC command to simulate PERST");
+		gpio_asic_reset_callback(NULL, NULL, 0);
 		break;
 	default:
 		LOG_WRN("Received unknown DMC command code %d",
